@@ -25,7 +25,10 @@ N= 5 # # instantons + #anti-instantons for DW
 
 g = 1
 tau0_PP = 3
-N_PP= 5 # # instantons + #anti-instantons
+N_PP= 7 # # instantons + #anti-instantons
+custom = 'IIAAIAAII' #custom order of (anti-)instantons for periodic potential. I=instanton , A=Anti-instantons 
+#remember that #I-#A= distance , please modify (1) and (2) if you need (automatic in future releases)
+
 
 FunctionColor = 'orangered' #color of the plot
 SecondFunctionColor ='b'
@@ -84,7 +87,7 @@ ax.yaxis.set_ticks_position('left')
 ax.set_ylabel(r'q($\tau)$', loc='top')
 ax.set_xlabel(r'$\tau$', loc='right')
 if Letter_mode:
-    xTicksInst = np.arange(tau0, 15*N_PP, step=15)
+    xTicksInst = np.arange(tau0_PP, 15*N_PP, step=15)
     yTicksInst = [-np.pi,0 , np.pi]
     xTicksLabel = []
     for i in range(N_PP):
@@ -105,3 +108,53 @@ for i in range(N_PP):
 
 
 plt.savefig(os.path.join('SG_Multiple-Instanton.png'))
+
+#----------------------------------------------------------------------------------------
+#Periodic Potential multiple-instantons (with  custom order)
+
+fig2 , ax2 = plt.subplots()
+
+ax2.spines['left'].set_position('zero')
+ax2.spines['bottom'].set_position('zero')
+ax2.spines['right'].set_color('none')
+ax2.spines['top'].set_color('none')
+ax2.xaxis.set_ticks_position('bottom')
+ax2.yaxis.set_ticks_position('left')
+ax2.set_ylabel(r'q($\tau)$', loc='top')
+ax2.set_xlabel(r'$\tau$', loc='right')
+part = len(custom) #number of inst
+if Letter_mode:
+    xTicksInst = np.arange(tau0_PP, 15*part, step=15)
+    yTicksInst = [-3*np.pi, -np.pi,0 , np.pi , 3*np.pi] #(1)
+    xTicksLabel = []
+    i = 0
+    for char in custom:
+        label = r'$\tau$'+ str(i+1)
+        xTicksLabel.append(label)
+        i= i+1
+    plt.xticks(xTicksInst, xTicksLabel)
+    plt.yticks (yTicksInst , ['-3π','-π', '0','π', '3π']) #(2)
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=12)
+    plt.setp( ax2.xaxis.get_majorticklabels(), ha="left" )
+    plt.setp( ax2.yaxis.get_majorticklabels(), va="top" )
+
+#plt.ylim(-a-0.3,a+0.3)
+j = 0
+InstNumber = 0
+for char in custom:
+    t = np.linspace(-5+j*15, 10+j*15, 10000)
+    if (char=='I'):
+        q_inst = 2*np.arcsin(np.tanh((t-(tau0_PP+j*15))*g)) + 2*np.pi*InstNumber 
+        ax2.plot(t , q_inst, FunctionColor)
+        InstNumber = InstNumber +1 
+        j = j+1
+        continue
+    q_inst = -2*np.arcsin(np.tanh((t-(tau0_PP+j*15))*g)) + 2*np.pi*(InstNumber -1 )
+    ax2.plot(t , q_inst, FunctionColor)
+    InstNumber = InstNumber - 1 
+    j = j+1
+        
+
+
+plt.savefig(os.path.join('SG_Multiple-Instanton_custom.png'))
