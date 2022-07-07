@@ -104,7 +104,7 @@ ax3.set_xlabel(r'$\tau$', loc='right')
 if Letter_mode:
     yTicksSec = [-g, g]
     xTicksSec = [ 0, tau0]
-    plt.yticks (yTicksSec , ['-g', 'g'])
+    plt.yticks (yTicksSec , [r'$-g^2$', r'$g^2$'])
     plt.xticks(xTicksSec, ['0', r'$\tau_0$'])
     plt.xticks(fontsize=12)
     plt.yticks(fontsize=12)
